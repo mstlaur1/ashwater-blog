@@ -1,5 +1,7 @@
 #!/bin/bash
-set -e
+set -eu
+
+export LC_ALL=C.UTF-8
 
 BLOG_DIR="/var/www/blog"
 POSTS_DIR="$BLOG_DIR/posts"
@@ -20,6 +22,11 @@ html_escape() {
     printf '%s' "$1" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g'
 }
 
+# Strip newlines (sed operates line-by-line, newlines break substitution)
+strip_newlines() {
+    tr '\n' ' '
+}
+
 # Safe sed substitution (escapes sed special chars)
 sed_escape() {
     printf '%s' "$1" | sed 's/[&/\]/\\&/g'
@@ -31,14 +38,20 @@ parse_frontmatter() {
     sed -n "/^---$/,/^---$/p" "$file" | grep "^${key}:" | sed "s/^${key}: *//" | head -1
 }
 
+get_date_with_fallback() {
+    local file="$1"
+    local date
+    date=$(parse_frontmatter "$file" "date")
+    [ -z "$date" ] && date=$(date -r "$file" +%Y-%m-%d)
+    printf '%s' "$date"
+}
+
 get_description() {
     local file="$1"
     local desc
     desc=$(parse_frontmatter "$file" "description")
     if [ -z "$desc" ]; then
-        # Get first non-empty paragraph after frontmatter (UTF-8 safe truncation)
         desc=$(sed '1,/^---$/d' "$file" | grep -v "^$" | grep -v "^#" | head -1 | sed 's/[*_`]//g')
-        # Truncate at word boundary around 160 chars
         if [ "${#desc}" -gt 160 ]; then
             desc="${desc:0:157}..."
         fi
@@ -55,15 +68,15 @@ build_post() {
     local slug title date description html_file
     slug=$(get_slug "$md_file")
     title=$(parse_frontmatter "$md_file" "title")
-    date=$(parse_frontmatter "$md_file" "date")
+    date=$(get_date_with_fallback "$md_file")
     description=$(get_description "$md_file")
     html_file="$PUBLIC_DIR/posts/${slug}.html"
     
-    # Escape for HTML and sed
+    # Escape for HTML, strip newlines, then escape for sed
     local title_html title_sed desc_html desc_sed
-    title_html=$(html_escape "$title")
+    title_html=$(html_escape "$title" | strip_newlines)
     title_sed=$(sed_escape "$title_html")
-    desc_html=$(html_escape "$description")
+    desc_html=$(html_escape "$description" | strip_newlines)
     desc_sed=$(sed_escape "$desc_html")
     
     {
@@ -100,16 +113,18 @@ build_index() {
         echo "<h1>Posts</h1>"
         echo "<ul class=\"post-list\">"
         
-        # Safe iteration over files (reverse sorted by name)
+        # Build sortable list: DATE|SLUG|TITLE, then sort and format
         for md_file in "$POSTS_DIR"/*.md; do
             [ -f "$md_file" ] || continue
             local slug title title_html date
             slug=$(get_slug "$md_file")
             title=$(parse_frontmatter "$md_file" "title")
-            title_html=$(html_escape "$title")
-            date=$(parse_frontmatter "$md_file" "date")
+            title_html=$(html_escape "$title" | strip_newlines)
+            date=$(get_date_with_fallback "$md_file")
+            echo "${date}|${slug}|${title_html}"
+        done | sort -r | while IFS='|' read -r date slug title_html; do
             echo "<li><time datetime=\"$date\">$date</time> <a href=\"/posts/${slug}.html\">$title_html</a></li>"
-        done | sort -r
+        done
         
         echo "</ul>"
         
@@ -133,9 +148,7 @@ build_sitemap() {
             [ -f "$md_file" ] || continue
             local slug date
             slug=$(get_slug "$md_file")
-            date=$(parse_frontmatter "$md_file" "date")
-            # Fallback to file modification date if no frontmatter date
-            [ -z "$date" ] && date=$(date -r "$md_file" +%Y-%m-%d)
+            date=$(get_date_with_fallback "$md_file")
             echo "  <url>"
             echo "    <loc>${protocol}://${DOMAIN}/posts/${slug}.html</loc>"
             echo "    <lastmod>${date}</lastmod>"

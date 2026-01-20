@@ -1,0 +1,137 @@
+:root {
+  --bg: #0a0a0a;
+  --fg: #ffb000;
+  --fg-dim: #cc8c00;
+  --link: #00ff88;
+  --link-hover: #00ffaa;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "SF Mono", "Fira Code", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+  line-height: 1.6;
+  margin: 0;
+  padding: 1rem;
+  min-height: 100vh;
+}
+
+main {
+  max-width: 70ch;
+  margin: 0 auto;
+  padding: 1rem 0;
+}
+
+h1, h2, h3 {
+  color: var(--fg);
+  text-shadow: 0 0 10px var(--fg-dim);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 1.5rem;
+  border-bottom: 1px solid var(--fg-dim);
+  padding-bottom: 0.5rem;
+}
+
+h1::after {
+  content: "█";
+  animation: blink 1s infinite;
+  margin-left: 0.25rem;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+h2 { font-size: 1.25rem; }
+h3 { font-size: 1.1rem; }
+
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+p, ul, ol {
+  margin: 1rem 0;
+}
+
+code {
+  background: #1a1a1a;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.9rem;
+}
+
+pre {
+  background: #1a1a1a;
+  padding: 1rem;
+  overflow-x: auto;
+  border-left: 3px solid var(--fg-dim);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+blockquote {
+  border-left: 3px solid var(--fg-dim);
+  margin: 1rem 0;
+  padding-left: 1rem;
+  color: var(--fg-dim);
+}
+
+time {
+  color: var(--fg-dim);
+  font-size: 0.9rem;
+}
+
+.post-list {
+  list-style: none;
+  padding: 0;
+}
+
+.post-list li {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #333;
+}
+
+.post-list time {
+  display: inline-block;
+  min-width: 10ch;
+}
+
+nav {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #333;
+}
+
+nav a {
+  margin-right: 1rem;
+}
+
+footer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid #333;
+  color: var(--fg-dim);
+  font-size: 0.85rem;
+}

@@ -17,6 +17,11 @@ fi
 
 mkdir -p "$PUBLIC_DIR/posts"
 
+# Check if file has frontmatter (starts with ---)
+has_frontmatter() {
+    head -1 "$1" | grep -q '^---$'
+}
+
 # HTML escape function
 html_escape() {
     printf '%s' "$1" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g'
@@ -32,10 +37,23 @@ sed_escape() {
     printf '%s' "$1" | sed 's/[&/\]/\\&/g'
 }
 
+# Only parse frontmatter if file actually has it
 parse_frontmatter() {
     local file="$1"
     local key="$2"
-    sed -n "/^---$/,/^---$/p" "$file" | grep "^${key}:" | sed "s/^${key}: *//" | head -1
+    if has_frontmatter "$file"; then
+        sed -n "/^---$/,/^---$/p" "$file" | grep "^${key}:" | sed "s/^${key}: *//" | head -1
+    fi
+}
+
+# Get content after frontmatter, or whole file if no frontmatter
+get_content() {
+    local file="$1"
+    if has_frontmatter "$file"; then
+        sed '1,/^---$/d' "$file"
+    else
+        cat "$file"
+    fi
 }
 
 get_date_with_fallback() {
@@ -51,7 +69,7 @@ get_description() {
     local desc
     desc=$(parse_frontmatter "$file" "description")
     if [ -z "$desc" ]; then
-        desc=$(sed '1,/^---$/d' "$file" | grep -v "^$" | grep -v "^#" | head -1 | sed 's/[*_`]//g')
+        desc=$(get_content "$file" | grep -v "^$" | grep -v "^#" | head -1 | sed 's/[*_`]//g')
         if [ "${#desc}" -gt 160 ]; then
             desc="${desc:0:157}..."
         fi
@@ -68,6 +86,8 @@ build_post() {
     local slug title date description html_file
     slug=$(get_slug "$md_file")
     title=$(parse_frontmatter "$md_file" "title")
+    # Fallback title to slug if no frontmatter
+    [ -z "$title" ] && title="$slug"
     date=$(get_date_with_fallback "$md_file")
     description=$(get_description "$md_file")
     html_file="$PUBLIC_DIR/posts/${slug}.html"
@@ -91,7 +111,7 @@ build_post() {
         echo "<time datetime=\"$date\">$date</time>"
         echo "</header>"
         
-        sed '1,/^---$/d' "$md_file" | lowdown
+        get_content "$md_file" | lowdown
         
         echo "</article>"
         
@@ -119,6 +139,7 @@ build_index() {
             local slug title title_html date
             slug=$(get_slug "$md_file")
             title=$(parse_frontmatter "$md_file" "title")
+            [ -z "$title" ] && title="$slug"
             title_html=$(html_escape "$title" | strip_newlines)
             date=$(get_date_with_fallback "$md_file")
             echo "${date}|${slug}|${title_html}"

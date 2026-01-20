@@ -1,0 +1,6 @@
+# Generated files - rebuild with ./build.sh
+public/
+
+# Editor backups
+*~
+*.swp

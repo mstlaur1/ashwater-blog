@@ -273,13 +273,7 @@ build_pi_stories_index() {
 
         echo "</ul>"
 
-        # Custom footer with stories RSS
-        echo "</main>"
-        echo "<footer>"
-        echo "  <p><a href=\"/feed-stories.xml\">rss</a> · <a href=\"/colophon.html\">Served from a Pi Zero 2 W</a></p>"
-        echo "</footer>"
-        echo "</body>"
-        echo "</html>"
+        output_footer
     } > "$index_file"
 
     echo "Built: $index_file"

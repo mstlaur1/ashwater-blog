@@ -18,7 +18,7 @@ fi
 
 CPU_TEMP=$(cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null | awk "{printf \"%.1f\", \$1/1000}")
 MEM_USED=$(free -m | awk "/Mem:/ {print \$3}")
-MEM_TOTAL=$(free -m | awk "/Mem:/ {print \$2}")
+MEM_TOTAL=$(free -m | awk "/Mem:/ {print \$7}")
 MEM_PCT=$((MEM_USED * 100 / MEM_TOTAL))
 LOAD=$(cat /proc/loadavg | cut -d" " -f1)
 DISK_USED=$(df -h / | awk "NR==2 {print \$3}")
@@ -106,14 +106,19 @@ cat > "$PUBLIC_DIR/colophon.html" << EOF
 </ul>
 
 <h2>Why?</h2>
-<p>Because its fun. Because a $15 computer can serve a blog to thousands of people. Because the web doesnt need to be complicated.</p>
+<p>Because its fun. Because a \$15 computer can serve a blog to thousands of people. Because the web doesnt need to be complicated.</p>
 
 </main>
 <footer>
-  <p><a href="/feed.xml">rss</a> · <a href="/colophon.html">Served from a Pi Zero 2 W</a> <span class="uptime">uptime: ${UPTIME_STR}</span></p>
+  <p><a href="/feed.xml">rss</a></p>
+  <p><a href="/colophon.html">Served from a Pi Zero 2 W</a></p>
+  <p class="uptime">uptime: ${UPTIME_STR}</p>
 </footer>
 </body>
 </html>
 EOF
+
+# Update about.html footer with uptime
+sed -i "s/uptime: [^<]*/uptime: ${UPTIME_STR}/" "$PUBLIC_DIR/about.html"
 
 echo "Vitals updated: uptime=$UPTIME_STR temp=${CPU_TEMP}°C mem=${MEM_PCT}%"

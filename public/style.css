@@ -155,3 +155,21 @@ footer {
   color: var(--fg-dim);
   margin-bottom: 0;
 }
+
+.breadcrumb {
+  font-size: 0.875rem;
+  color: var(--fg-dim);
+  margin-bottom: 1rem;
+}
+
+.breadcrumb a {
+  color: var(--fg-dim);
+}
+
+.breadcrumb a:hover {
+  color: var(--fg);
+}
+
+.breadcrumb span {
+  margin: 0 0.25rem;
+}

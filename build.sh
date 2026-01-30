@@ -99,25 +99,40 @@ build_post() {
     desc_html=$(html_escape "$description" | strip_newlines)
     desc_sed=$(sed_escape "$desc_html")
     
+    local protocol="https"
+    [ "$DOMAIN" = "localhost" ] && protocol="http"
+
     {
         sed -e "s/{{TITLE}}/$title_sed/g" \
             -e "s/{{DESCRIPTION}}/$desc_sed/g" \
             -e "s/{{OG_TYPE}}/article/g" \
             "$TEMPLATES_DIR/header.html"
-        
+
+        # Breadcrumb JSON-LD
+        echo "<script type=\"application/ld+json\">"
+        echo "{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":["
+        echo "{\"@type\":\"ListItem\",\"position\":1,\"name\":\"Home\",\"item\":\"${protocol}://${DOMAIN}/\"},"
+        echo "{\"@type\":\"ListItem\",\"position\":2,\"name\":\"Posts\",\"item\":\"${protocol}://${DOMAIN}/\"},"
+        echo "{\"@type\":\"ListItem\",\"position\":3,\"name\":\"$title_html\"}"
+        echo "]}</script>"
+
+        echo "<nav class=\"breadcrumb\" aria-label=\"Breadcrumb\">"
+        echo "<a href=\"/\">Home</a> <span>/</span> <a href=\"/\">Posts</a> <span>/</span> <span>$title_html</span>"
+        echo "</nav>"
+
         echo "<article>"
         echo "<header>"
         echo "<h1>$title_html</h1>"
         echo "<time datetime=\"$date\">$date</time>"
         echo "</header>"
-        
+
         get_content "$md_file" | lowdown
-        
+
         echo "</article>"
-        
+
         cat "$TEMPLATES_DIR/footer.html"
     } > "$html_file"
-    
+
     echo "Built: $html_file"
 }
 
@@ -130,32 +145,47 @@ build_pi_story() {
     date=$(get_date_with_fallback "$md_file")
     description=$(get_description "$md_file")
     html_file="$PUBLIC_DIR/pi-stories/${slug}.html"
-    
+
     local title_html title_sed desc_html desc_sed
     title_html=$(html_escape "$title" | strip_newlines)
     title_sed=$(sed_escape "$title_html")
     desc_html=$(html_escape "$description" | strip_newlines)
     desc_sed=$(sed_escape "$desc_html")
-    
+
+    local protocol="https"
+    [ "$DOMAIN" = "localhost" ] && protocol="http"
+
     {
         sed -e "s/{{TITLE}}/$title_sed/g" \
             -e "s/{{DESCRIPTION}}/$desc_sed/g" \
             -e "s/{{OG_TYPE}}/article/g" \
             "$TEMPLATES_DIR/header.html"
-        
+
+        # Breadcrumb JSON-LD
+        echo "<script type=\"application/ld+json\">"
+        echo "{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":["
+        echo "{\"@type\":\"ListItem\",\"position\":1,\"name\":\"Home\",\"item\":\"${protocol}://${DOMAIN}/\"},"
+        echo "{\"@type\":\"ListItem\",\"position\":2,\"name\":\"Pi Stories\",\"item\":\"${protocol}://${DOMAIN}/pi-stories/\"},"
+        echo "{\"@type\":\"ListItem\",\"position\":3,\"name\":\"$title_html\"}"
+        echo "]}</script>"
+
+        echo "<nav class=\"breadcrumb\" aria-label=\"Breadcrumb\">"
+        echo "<a href=\"/\">Home</a> <span>/</span> <a href=\"/pi-stories/\">Pi Stories</a> <span>/</span> <span>$title_html</span>"
+        echo "</nav>"
+
         echo "<article>"
         echo "<header>"
         echo "<h1>$title_html</h1>"
         echo "<time datetime=\"$date\">$date</time>"
         echo "</header>"
-        
+
         get_content "$md_file" | lowdown
-        
+
         echo "</article>"
-        
+
         cat "$TEMPLATES_DIR/footer.html"
     } > "$html_file"
-    
+
     echo "Built: $html_file"
 }
 

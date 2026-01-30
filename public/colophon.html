@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colophon | Ashwater</title>
+  <meta name="description" content="The hardware and software stack powering Ashwater">
+  <meta property="og:title" content="Colophon | Ashwater">
+  <meta property="og:description" content="The hardware and software stack powering Ashwater">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
+  <link rel="icon" href="/favicon.ico">
+</head>
+<body>
+<nav>
+  <a href="/">~/home</a>
+  <a href="/pi-stories/">~/pi-stories</a>
+  <a href="/about.html">~/about</a>
+</nav>
+<main>
+<h1>Colophon</h1>
+
+<p>This blog is served from a tiny computer sitting on a shelf, running 24/7 on less power than an LED bulb.</p>
+
+<h2>Hardware</h2>
+
+<table>
+<tr><td><strong>Board</strong></td><td>Raspberry Pi Zero 2 W</td></tr>
+<tr><td><strong>CPU</strong></td><td>Quad-core ARM Cortex-A53 @ 1GHz</td></tr>
+<tr><td><strong>RAM</strong></td><td>512MB LPDDR2</td></tr>
+<tr><td><strong>Storage</strong></td><td>64GB microSD</td></tr>
+<tr><td><strong>Network</strong></td><td>802.11 b/g/n WiFi</td></tr>
+<tr><td><strong>Power</strong></td><td>~0.5W idle, ~1.5W under load</td></tr>
+<tr><td><strong>Cost</strong></td><td>~$15 USD</td></tr>
+</table>
+
+<h2>Software Stack</h2>
+
+<table>
+<tr><td><strong>OS</strong></td><td>Raspberry Pi OS Lite (Debian Bookworm)</td></tr>
+<tr><td><strong>Web Server</strong></td><td>lighttpd</td></tr>
+<tr><td><strong>Tunnel</strong></td><td>Cloudflare Tunnel (cloudflared)</td></tr>
+<tr><td><strong>Build System</strong></td><td>~200 lines of bash + lowdown</td></tr>
+<tr><td><strong>AI Model</strong></td><td>TinyLlama-15M-Stories (14MB GGUF)</td></tr>
+<tr><td><strong>Inference</strong></td><td>llama.cpp (~100 tokens/sec)</td></tr>
+</table>
+
+<h2>Architecture</h2>
+
+<pre>
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Browser   │────▶│  Cloudflare │────▶│  Pi Zero 2  │
+│             │◀────│   (Tunnel)  │◀────│  (lighttpd) │
+└─────────────┘     └─────────────┘     └─────────────┘
+                           │
+                    HTTPS termination
+                    DDoS protection
+                    (No caching - pure tunnel)
+</pre>
+
+<h2>Fun Facts</h2>
+
+<ul>
+<li>The Pi draws about <strong>4 kWh per year</strong> — roughly $0.50 in electricity</li>
+<li>Every page you see was served directly from this tiny board, not a CDN</li>
+<li>Daily stories are generated at 3am by a 15-million parameter AI model</li>
+<li>The entire blog (HTML, CSS, posts) fits in about 100KB</li>
+<li>Build time for the whole site: ~0.1 seconds</li>
+<li>The WiFi chip is the bottleneck — theoretically maxing out at ~50 Mbps</li>
+</ul>
+
+<h2>Why?</h2>
+
+<p>Because its fun. Because a 5 computer can serve a blog to thousands of people. Because the web doesnt need to be complicated.</p>
+
+</main>
+<footer>
+  <p><a href="/feed.xml">rss</a> · <a href="/colophon.html">Served from a Pi Zero 2 W</a></p>
+</footer>
+</body>
+</html>

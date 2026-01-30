@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://blog.ashwater.ca/</loc></url>
+  <url><loc>https://blog.ashwater.ca/pi-stories/</loc></url>
   <url>
     <loc>https://blog.ashwater.ca/posts/hello-world.html</loc>
     <lastmod>2026-01-29</lastmod>
   </url>
   <url>
-    <loc>https://blog.ashwater.ca/posts/pi-story-2026-01-30.html</loc>
+    <loc>https://blog.ashwater.ca/pi-stories/pi-story-2026-01-30.html</loc>
     <lastmod>2026-01-30</lastmod>
   </url>
 </urlset>

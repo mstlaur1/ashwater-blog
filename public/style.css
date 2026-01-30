@@ -135,3 +135,23 @@ footer {
   color: var(--fg-dim);
   font-size: 0.85rem;
 }
+
+.hero {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #333;
+}
+
+.hero h1 {
+  margin-top: 0;
+  font-size: 2rem;
+}
+
+.hero h1::after {
+  content: none;
+}
+
+.hero p {
+  color: var(--fg-dim);
+  margin-bottom: 0;
+}

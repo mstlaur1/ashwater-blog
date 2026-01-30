@@ -123,14 +123,18 @@ build_post() {
 
 build_index() {
     local index_file="$PUBLIC_DIR/index.html"
-    
+
     {
-        sed -e "s/{{TITLE}}/Blog/g" \
-            -e "s/{{DESCRIPTION}}/A minimal blog served from a Pi Zero 2 W/g" \
+        sed -e "s/{{TITLE}}/Home/g" \
+            -e "s/{{DESCRIPTION}}/Ashwater - A minimal blog about self-hosting, Linux, and tinkering with technology/g" \
             -e "s/{{OG_TYPE}}/website/g" \
             "$TEMPLATES_DIR/header.html"
-        
-        echo "<h1>Posts</h1>"
+
+        echo "<header class=\"hero\">"
+        echo "<h1>Ashwater</h1>"
+        echo "<p>A minimal blog about self-hosting, Linux, and tinkering with technology.</p>"
+        echo "</header>"
+        echo "<h2>Posts</h2>"
         echo "<ul class=\"post-list\">"
         
         # Build sortable list: DATE|SLUG|TITLE, then sort and format
@@ -204,9 +208,9 @@ build_rss() {
         echo '<?xml version="1.0" encoding="UTF-8"?>'
         echo '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">'
         echo '<channel>'
-        echo "  <title>Blog</title>"
+        echo "  <title>Ashwater</title>"
         echo "  <link>${protocol}://${DOMAIN}/</link>"
-        echo "  <description>A minimal blog served from a Pi Zero 2 W</description>"
+        echo "  <description>A minimal blog about self-hosting, Linux, and tinkering with technology</description>"
         echo "  <atom:link href=\"${protocol}://${DOMAIN}/feed.xml\" rel=\"self\" type=\"application/rss+xml\"/>"
 
         # Build sortable list first, then generate items

@@ -185,7 +185,7 @@ build_sitemap() {
 build_robots() {
     local protocol="https"
     [ "$DOMAIN" = "localhost" ] && protocol="http"
-    
+
     cat > "$PUBLIC_DIR/robots.txt" << EOF
 User-agent: *
 Allow: /
@@ -193,6 +193,50 @@ Allow: /
 Sitemap: ${protocol}://${DOMAIN}/sitemap.xml
 EOF
     echo "Built: $PUBLIC_DIR/robots.txt"
+}
+
+build_rss() {
+    local rss_file="$PUBLIC_DIR/feed.xml"
+    local protocol="https"
+    [ "$DOMAIN" = "localhost" ] && protocol="http"
+
+    {
+        echo '<?xml version="1.0" encoding="UTF-8"?>'
+        echo '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">'
+        echo '<channel>'
+        echo "  <title>Blog</title>"
+        echo "  <link>${protocol}://${DOMAIN}/</link>"
+        echo "  <description>A minimal blog served from a Pi Zero 2 W</description>"
+        echo "  <atom:link href=\"${protocol}://${DOMAIN}/feed.xml\" rel=\"self\" type=\"application/rss+xml\"/>"
+
+        # Build sortable list first, then generate items
+        for md_file in "$POSTS_DIR"/*.md; do
+            [ -f "$md_file" ] || continue
+            local slug title date description
+            slug=$(get_slug "$md_file")
+            title=$(parse_frontmatter "$md_file" "title")
+            [ -z "$title" ] && title="$slug"
+            date=$(get_date_with_fallback "$md_file")
+            description=$(get_description "$md_file")
+            # Escape XML entities
+            title=$(printf '%s' "$title" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
+            description=$(printf '%s' "$description" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
+            echo "${date}|${slug}|${title}|${description}"
+        done | sort -r | while IFS='|' read -r date slug title description; do
+            echo "  <item>"
+            echo "    <title>$title</title>"
+            echo "    <link>${protocol}://${DOMAIN}/posts/${slug}.html</link>"
+            echo "    <guid>${protocol}://${DOMAIN}/posts/${slug}.html</guid>"
+            echo "    <pubDate>$(date -d "$date" -R 2>/dev/null || echo "$date")</pubDate>"
+            echo "    <description>$description</description>"
+            echo "  </item>"
+        done
+
+        echo '</channel>'
+        echo '</rss>'
+    } > "$rss_file"
+
+    echo "Built: $rss_file"
 }
 
 echo "Building blog..."
@@ -205,5 +249,6 @@ done
 build_index
 build_sitemap
 build_robots
+build_rss
 
 echo "Done!"

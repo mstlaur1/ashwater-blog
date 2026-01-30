@@ -19,6 +19,22 @@ fi
 mkdir -p "$PUBLIC_DIR/posts"
 mkdir -p "$PUBLIC_DIR/pi-stories"
 
+# Get uptime for footer
+get_uptime() {
+    if [ -f "$PUBLIC_DIR/uptime.txt" ]; then
+        cat "$PUBLIC_DIR/uptime.txt"
+    else
+        echo "starting..."
+    fi
+}
+
+# Output footer with uptime
+output_footer() {
+    local uptime
+    uptime=$(get_uptime)
+    sed "s/{{UPTIME}}/uptime: $uptime/" "$TEMPLATES_DIR/footer.html"
+}
+
 # Check if file has frontmatter (starts with ---)
 has_frontmatter() {
     head -1 "$1" | grep -q "^---$"
@@ -130,7 +146,7 @@ build_post() {
 
         echo "</article>"
 
-        cat "$TEMPLATES_DIR/footer.html"
+        output_footer
     } > "$html_file"
 
     echo "Built: $html_file"
@@ -183,7 +199,7 @@ build_pi_story() {
 
         echo "</article>"
 
-        cat "$TEMPLATES_DIR/footer.html"
+        output_footer
     } > "$html_file"
 
     echo "Built: $html_file"
@@ -220,7 +236,7 @@ build_index() {
         
         echo "</ul>"
         
-        cat "$TEMPLATES_DIR/footer.html"
+        output_footer
     } > "$index_file"
     
     echo "Built: $index_file"

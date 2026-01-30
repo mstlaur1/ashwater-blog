@@ -3,20 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>404 - Not Found</title>
+  <title>404 - Page Not Found | Ashwater</title>
+  <meta name="description" content="Page not found">
   <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="/favicon.ico">
+  <style>
+    .ascii-art {
+      font-family: monospace;
+      white-space: pre;
+      font-size: 0.7rem;
+      line-height: 1.1;
+      color: var(--fg-dim);
+      margin: 2rem 0;
+    }
+    .error-page {
+      text-align: center;
+      padding: 2rem 0;
+    }
+    .error-page h1 {
+      font-size: 4rem;
+      margin: 0;
+    }
+    .error-page h1::after {
+      content: none;
+    }
+  </style>
 </head>
 <body>
 <nav>
   <a href="/">~/home</a>
+  <a href="/pi-stories/">~/pi-stories</a>
+  <a href="/about.html">~/about</a>
 </nav>
 <main>
+<div class="error-page">
   <h1>404</h1>
-  <p>File not found.</p>
-  <p><a href="/">Return to index</a></p>
+  <p>Page not found. The Pi looked everywhere.</p>
+  
+  <pre class="ascii-art">
+       .---.
+      |o_o |
+      |:_/ |
+     //   \ \
+    (|     | )
+   /\_____/\
+   \___)=(___/
+  </pre>
+  
+  <p><a href="/">← Back to safety</a></p>
+</div>
 </main>
 <footer>
-  <p>Served from a Pi Zero 2 W</p>
+  <p><a href="/feed.xml">rss</a> · <a href="/colophon.html">Served from a Pi Zero 2 W</a></p>
 </footer>
 </body>
 </html>

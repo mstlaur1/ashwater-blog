@@ -1,3 +1,35 @@
+#!/bin/bash
+# Update Pi vitals every 30 minutes
+
+BLOG_DIR="/var/www/blog"
+PUBLIC_DIR="$BLOG_DIR/public"
+
+# Get stats
+UPTIME_SECONDS=$(cat /proc/uptime | cut -d. -f1)
+UPTIME_DAYS=$((UPTIME_SECONDS / 86400))
+UPTIME_HOURS=$(( (UPTIME_SECONDS % 86400) / 3600 ))
+UPTIME_MINS=$(( (UPTIME_SECONDS % 3600) / 60 ))
+
+if [ $UPTIME_DAYS -gt 0 ]; then
+    UPTIME_STR="${UPTIME_DAYS}d ${UPTIME_HOURS}h"
+else
+    UPTIME_STR="${UPTIME_HOURS}h ${UPTIME_MINS}m"
+fi
+
+CPU_TEMP=$(cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null | awk "{printf \"%.1f\", \$1/1000}")
+MEM_USED=$(free -m | awk "/Mem:/ {print \$3}")
+MEM_TOTAL=$(free -m | awk "/Mem:/ {print \$2}")
+MEM_PCT=$((MEM_USED * 100 / MEM_TOTAL))
+LOAD=$(cat /proc/loadavg | cut -d" " -f1)
+DISK_USED=$(df -h / | awk "NR==2 {print \$3}")
+DISK_AVAIL=$(df -h / | awk "NR==2 {print \$4}")
+UPDATED=$(date "+%Y-%m-%d %H:%M")
+
+# Save uptime for footer
+echo "$UPTIME_STR" > "$PUBLIC_DIR/uptime.txt"
+
+# Generate colophon with live stats
+cat > "$PUBLIC_DIR/colophon.html" << EOF
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,12 +54,12 @@
 
 <h2>Live Vitals</h2>
 <table class="vitals">
-<tr><td>Uptime</td><td>1h 1m</td></tr>
-<tr><td>CPU Temp</td><td>41.9°C</td></tr>
-<tr><td>Memory</td><td>110MB / 464MB (23%)</td></tr>
-<tr><td>Load</td><td>0.01</td></tr>
-<tr><td>Disk</td><td>3.0G used / 53G free</td></tr>
-<tr><td>Updated</td><td>2026-01-30 07:08</td></tr>
+<tr><td>Uptime</td><td>${UPTIME_STR}</td></tr>
+<tr><td>CPU Temp</td><td>${CPU_TEMP}°C</td></tr>
+<tr><td>Memory</td><td>${MEM_USED}MB / ${MEM_TOTAL}MB (${MEM_PCT}%)</td></tr>
+<tr><td>Load</td><td>${LOAD}</td></tr>
+<tr><td>Disk</td><td>${DISK_USED} used / ${DISK_AVAIL} free</td></tr>
+<tr><td>Updated</td><td>${UPDATED}</td></tr>
 </table>
 
 <h2>Hardware</h2>
@@ -38,7 +70,7 @@
 <tr><td><strong>Storage</strong></td><td>64GB microSD</td></tr>
 <tr><td><strong>Network</strong></td><td>802.11 b/g/n WiFi</td></tr>
 <tr><td><strong>Power</strong></td><td>~0.5W idle, ~1.5W under load</td></tr>
-<tr><td><strong>Cost</strong></td><td>~$15 USD</td></tr>
+<tr><td><strong>Cost</strong></td><td>~\$15 USD</td></tr>
 </table>
 
 <h2>Software Stack</h2>
@@ -65,7 +97,7 @@
 
 <h2>Fun Facts</h2>
 <ul>
-<li>The Pi draws about <strong>4 kWh per year</strong> — roughly $0.50 in electricity</li>
+<li>The Pi draws about <strong>4 kWh per year</strong> — roughly \$0.50 in electricity</li>
 <li>Every page you see was served directly from this tiny board, not a CDN</li>
 <li>Daily stories are generated at 3am by a 15-million parameter AI model</li>
 <li>The entire blog (HTML, CSS, posts) fits in about 100KB</li>
@@ -74,11 +106,14 @@
 </ul>
 
 <h2>Why?</h2>
-<p>Because its fun. Because a 5 computer can serve a blog to thousands of people. Because the web doesnt need to be complicated.</p>
+<p>Because its fun. Because a $15 computer can serve a blog to thousands of people. Because the web doesnt need to be complicated.</p>
 
 </main>
 <footer>
-  <p><a href="/feed.xml">rss</a> · <a href="/colophon.html">Served from a Pi Zero 2 W</a> <span class="uptime">uptime: 1h 1m</span></p>
+  <p><a href="/feed.xml">rss</a> · <a href="/colophon.html">Served from a Pi Zero 2 W</a> <span class="uptime">uptime: ${UPTIME_STR}</span></p>
 </footer>
 </body>
 </html>
+EOF
+
+echo "Vitals updated: uptime=$UPTIME_STR temp=${CPU_TEMP}°C mem=${MEM_PCT}%"

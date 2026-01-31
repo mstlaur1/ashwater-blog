@@ -32,7 +32,6 @@ main {
 
 h1, h2, h3 {
   color: var(--fg);
-  text-shadow: 0 0 10px var(--fg-dim);
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
@@ -43,16 +42,7 @@ h1 {
   padding-bottom: 0.5rem;
 }
 
-h1::after {
-  content: "█";
-  animation: blink 1s infinite;
-  margin-left: 0.25rem;
-}
 
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
 
 h2 { font-size: 1.25rem; }
 h3 { font-size: 1.1rem; }
@@ -147,9 +137,6 @@ footer {
   font-size: 2rem;
 }
 
-.hero h1::after {
-  content: none;
-}
 
 .hero p {
   color: var(--fg-dim);

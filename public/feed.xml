@@ -6,6 +6,13 @@
   <description>A minimal blog about self-hosting, Linux, and tinkering with technology</description>
   <atom:link href="https://blog.ashwater.ca/feed.xml" rel="self" type="application/rss+xml"/>
   <item>
+    <title>Running a Language Model on a $15 Computer</title>
+    <link>https://blog.ashwater.ca/posts/tiny-ai-big-dreams.html</link>
+    <guid>https://blog.ashwater.ca/posts/tiny-ai-big-dreams.html</guid>
+    <pubDate>Fri, 30 Jan 2026 00:00:00 -0500</pubDate>
+    <description>How a 15-million parameter AI generates daily stories on a Raspberry Pi Zero 2 W, and what it means for the future of local inference.</description>
+  </item>
+  <item>
     <title>Hello World</title>
     <link>https://blog.ashwater.ca/posts/hello-world.html</link>
     <guid>https://blog.ashwater.ca/posts/hello-world.html</guid>

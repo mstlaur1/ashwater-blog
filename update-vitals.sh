@@ -44,6 +44,7 @@ cat > "$PUBLIC_DIR/colophon.html" << EOF
 <body>
 <nav>
   <a href="/">~/home</a>
+  <a href="/posts/">~/posts</a>
   <a href="/pi-stories/">~/pi-stories</a>
   <a href="/about.html">~/about</a>
 </nav>

@@ -145,12 +145,12 @@ build_post() {
         echo "<script type=\"application/ld+json\">"
         echo "{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":["
         echo "{\"@type\":\"ListItem\",\"position\":1,\"name\":\"Home\",\"item\":\"${protocol}://${DOMAIN}/\"},"
-        echo "{\"@type\":\"ListItem\",\"position\":2,\"name\":\"Posts\",\"item\":\"${protocol}://${DOMAIN}/\"},"
+        echo "{\"@type\":\"ListItem\",\"position\":2,\"name\":\"Posts\",\"item\":\"${protocol}://${DOMAIN}/posts/\"},"
         echo "{\"@type\":\"ListItem\",\"position\":3,\"name\":\"$title_html\"}"
         echo "]}</script>"
 
         echo "<nav class=\"breadcrumb\" aria-label=\"Breadcrumb\">"
-        echo "<a href=\"/\">Home</a> <span>/</span> <a href=\"/\">Posts</a> <span>/</span> <span>$title_html</span>"
+        echo "<a href=\"/\">~</a><span class=\"sep\">/</span><a href=\"/posts/\">posts</a><span class=\"sep\">/</span><span>$title_html</span>"
         echo "</nav>"
 
         echo "<article>"
@@ -219,7 +219,7 @@ build_pi_story() {
         echo "]}</script>"
 
         echo "<nav class=\"breadcrumb\" aria-label=\"Breadcrumb\">"
-        echo "<a href=\"/\">Home</a> <span>/</span> <a href=\"/pi-stories/\">Pi Stories</a> <span>/</span> <span>$title_html</span>"
+        echo "<a href=\"/\">~</a><span class=\"sep\">/</span><a href=\"/pi-stories/\">pi-stories</a><span class=\"sep\">/</span><span>$title_html</span>"
         echo "</nav>"
 
         echo "<article>"
@@ -245,18 +245,86 @@ build_index() {
 
     {
         sed -e "s/{{TITLE}}/Home/g" \
-            -e "s/{{DESCRIPTION}}/Ashwater - A minimal blog about self-hosting, Linux, and tinkering with technology/g" \
+            -e "s/{{DESCRIPTION}}/Projects, planes, and parenthood. A tinkerer's journal from the Laurentians./g" \
             -e "s/{{OG_TYPE}}/website/g" \
             -e "s|{{CANONICAL}}|${protocol}://${DOMAIN}/|g" \
             "$TEMPLATES_DIR/header.html"
 
         echo "<header class=\"hero\">"
         echo "<h1>Ashwater</h1>"
-        echo "<p>A minimal blog about self-hosting, Linux, and tinkering with technology.</p>"
+        echo "<p class=\"tagline\">Projects, planes, and parenthood.</p>"
         echo "</header>"
-        echo "<h2>Posts</h2>"
+
+        echo "<section class=\"intro\">"
+        echo "<p>Welcome. I'm Mikhail—father, airline pilot, and habitual tinkerer.</p>"
+        echo "<p>This site is my journal: notes on self-hosting, aviation, fatherhood, and whatever else I'm building or breaking. It runs on a Raspberry Pi Zero 2 W drawing half a watt, because in an age of bloated frameworks and infinite cloud compute, there's something satisfying about creative constraints.</p>"
+        echo "<p>No tracking. No JavaScript. Just words, served from a shelf in the Laurentians.</p>"
+        echo "</section>"
+
+        echo "<h2>Recent Posts</h2>"
         echo "<ul class=\"post-list\">"
-        
+
+        for md_file in "$POSTS_DIR"/*.md; do
+            [ -f "$md_file" ] || continue
+            local slug title title_html date
+            slug=$(get_slug "$md_file")
+            title=$(parse_frontmatter "$md_file" "title")
+            [ -z "$title" ] && title="$slug"
+            title_html=$(html_escape "$title" | strip_newlines)
+            date=$(get_date_with_fallback "$md_file")
+            echo "${date}|${slug}|${title_html}"
+        done | sort -r | head -5 | while IFS="|" read -r date slug title_html; do
+            echo "<li><time datetime=\"$date\">$date</time> <a href=\"/posts/${slug}.html\">$title_html</a></li>"
+        done
+
+        echo "</ul>"
+        echo "<p class=\"more-link\"><a href=\"/posts/\">All posts →</a></p>"
+
+        # Subtle pi-stories section
+        echo "<aside class=\"pi-stories-preview\">"
+        echo "<h3>Latest Pi Story</h3>"
+        echo "<p class=\"pi-stories-desc\">Daily tales from a 15M parameter AI running on the Pi.</p>"
+
+        for md_file in "$PI_STORIES_DIR"/*.md; do
+            [ -f "$md_file" ] || continue
+            local slug title title_html date
+            slug=$(get_slug "$md_file")
+            title=$(parse_frontmatter "$md_file" "title")
+            [ -z "$title" ] && title="$slug"
+            title_html=$(html_escape "$title" | strip_newlines)
+            date=$(get_date_with_fallback "$md_file")
+            echo "${date}|${slug}|${title_html}"
+        done | sort -r | head -1 | while IFS="|" read -r date slug title_html; do
+            echo "<p><a href=\"/pi-stories/${slug}.html\">$title_html</a> <span class=\"date\">($date)</span></p>"
+        done
+
+        echo "<p class=\"more-link\"><a href=\"/pi-stories/\">All stories →</a></p>"
+        echo "</aside>"
+
+        output_footer
+    } > "$index_file"
+
+    echo "Built: $index_file"
+}
+
+build_posts_index() {
+    local index_file="$PUBLIC_DIR/posts/index.html"
+    local protocol="https"
+    [ "$DOMAIN" = "localhost" ] && protocol="http"
+
+    {
+        sed -e "s/{{TITLE}}/Posts/g" \
+            -e "s/{{DESCRIPTION}}/All posts from Ashwater - projects, aviation, self-hosting, and more/g" \
+            -e "s/{{OG_TYPE}}/website/g" \
+            -e "s|{{CANONICAL}}|${protocol}://${DOMAIN}/posts/|g" \
+            "$TEMPLATES_DIR/header.html"
+
+        echo "<header class=\"hero\">"
+        echo "<h1>Posts</h1>"
+        echo "<p>Everything I've written, newest first.</p>"
+        echo "</header>"
+        echo "<ul class=\"post-list\">"
+
         for md_file in "$POSTS_DIR"/*.md; do
             [ -f "$md_file" ] || continue
             local slug title title_html date
@@ -269,12 +337,12 @@ build_index() {
         done | sort -r | while IFS="|" read -r date slug title_html; do
             echo "<li><time datetime=\"$date\">$date</time> <a href=\"/posts/${slug}.html\">$title_html</a></li>"
         done
-        
+
         echo "</ul>"
-        
+
         output_footer
     } > "$index_file"
-    
+
     echo "Built: $index_file"
 }
 
@@ -327,6 +395,7 @@ build_sitemap() {
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
         echo "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">"
         echo "  <url><loc>${protocol}://${DOMAIN}/</loc></url>"
+        echo "  <url><loc>${protocol}://${DOMAIN}/posts/</loc></url>"
         echo "  <url><loc>${protocol}://${DOMAIN}/pi-stories/</loc></url>"
         
         for md_file in "$POSTS_DIR"/*.md; do
@@ -498,6 +567,7 @@ for md_file in "$PI_STORIES_DIR"/*.md; do
 done
 
 build_index
+build_posts_index
 build_pi_stories_index
 build_sitemap
 build_robots

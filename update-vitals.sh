@@ -37,7 +37,7 @@ cat > "$PUBLIC_DIR/colophon.html" << EOF
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Colophon | Ashwater</title>
   <meta name="description" content="The hardware and software stack powering Ashwater">
-  <link rel="stylesheet" href="/style.css?v=2">
+  <link rel="stylesheet" href="/style.css?v=3">
   <link rel="icon" href="/favicon.ico">
   <style>.vitals td:first-child { font-weight: bold; } .vitals { margin: 1rem 0; }</style>
 </head>

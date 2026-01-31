@@ -170,3 +170,31 @@ footer p {
   font-size: 0.875rem;
 }
 
+
+.post-meta {
+  color: var(--fg-dim);
+  font-size: 0.9rem;
+  margin-top: 0;
+}
+
+.post-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px dashed #333;
+  font-size: 0.9rem;
+}
+
+.post-nav a {
+  max-width: 45%;
+}
+
+.post-nav .prev::before {
+  content: none;
+}
+
+.post-nav .next {
+  text-align: right;
+  margin-left: auto;
+}

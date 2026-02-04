@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Ashwater - Aviation</title>
+  <link>https://blog.ashwater.ca/tags/aviation/</link>
+  <description>Posts about Aviation from Ashwater</description>
+  <atom:link href="https://blog.ashwater.ca/tags/aviation/feed.xml" rel="self" type="application/rss+xml"/>
+  <item>
+    <title>My Day Starts Before Yours: What an Airline Pilot's Morning Actually Looks Like</title>
+    <link>https://blog.ashwater.ca/posts/pilot-life.html</link>
+    <guid>https://blog.ashwater.ca/posts/pilot-life.html</guid>
+    <pubDate>Tue, 03 Feb 2026 00:00:00 -0500</pubDate>
+    <description>Most people think the hard part of being an airline pilot happens in the air. Nope.</description>
+  </item>
+</channel>
+</rss>

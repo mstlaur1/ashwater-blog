@@ -1,6 +1,7 @@
 ---
 title: When Your Hypothesis Fails: A Journey to 2x Faster Edge LLM Inference 
 date: 2026-02-01
+tag: tinkering
 description: I wanted to run a 7B parameter language model on a Raspberry Pi Zero.
 The numbers don’t add up at first glance: - LLaMA-7B: ~3.5GB (INT4 quantized) - Pi Zero RAM: 512MB - Gap: 7x too large
 But what if we didn’t need to fit the whole model in memory?

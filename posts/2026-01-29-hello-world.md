@@ -1,6 +1,7 @@
 ---
 title: Hello World
 date: 2026-01-29
+tag: tinkering
 description: The first post from my tiny Pi-powered blog
 ---
 

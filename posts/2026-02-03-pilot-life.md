@@ -1,6 +1,7 @@
 ---
 title: My Day Starts Before Yours: What an Airline Pilot's Morning Actually Looks Like
 date: 2026-02-03
+tag: aviation
 description: Most people think the hard part of being an airline pilot happens in the air. Nope.
 ---
 

@@ -10,6 +10,31 @@ PAGES_DIR="$BLOG_DIR/pages"
 PUBLIC_DIR="$BLOG_DIR/public"
 TEMPLATES_DIR="$BLOG_DIR/templates"
 DOMAIN="${BLOG_DOMAIN:-localhost}"
+# Tag configuration
+VALID_TAGS=("aviation" "tinkering" "dad-life")
+
+get_tag() {
+    local file="$1"
+    local tag
+    tag=$(parse_frontmatter "$file" "tag")
+    if [ -n "$tag" ]; then
+        for valid in "${VALID_TAGS[@]}"; do
+            if [ "$tag" = "$valid" ]; then
+                printf "%s" "$tag"
+                return
+            fi
+        done
+    fi
+    printf ""
+}
+
+get_tag_html() {
+    local tag="$1"
+    if [ -n "$tag" ]; then
+        printf "<a href=\"/tags/%s/\" class=\"tag tag-%s\">%s</a>" "$tag" "$tag" "$tag"
+    fi
+}
+
 
 # Preflight check
 if ! command -v lowdown &> /dev/null; then
@@ -19,6 +44,7 @@ fi
 
 mkdir -p "$PUBLIC_DIR/posts"
 mkdir -p "$PUBLIC_DIR/pi-stories"
+mkdir -p "$PUBLIC_DIR/tags"
 
 # Get uptime for footer
 get_uptime() {
@@ -316,15 +342,18 @@ build_index() {
 
         for md_file in "$POSTS_DIR"/*.md; do
             [ -f "$md_file" ] || continue
-            local slug title title_html date
+            local slug title title_html date tag
             slug=$(get_slug "$md_file")
             title=$(parse_frontmatter "$md_file" "title")
             [ -z "$title" ] && title="$slug"
             title_html=$(html_escape "$title" | strip_newlines)
             date=$(get_date_with_fallback "$md_file")
-            echo "${date}|${slug}|${title_html}"
-        done | sort -r | head -5 | while IFS="|" read -r date slug title_html; do
-            echo "<li><time datetime=\"$date\">$date</time> <a href=\"/posts/${slug}.html\">$title_html</a></li>"
+            tag=$(get_tag "$md_file")
+            echo "${date}|${slug}|${title_html}|${tag}"
+        done | sort -r | head -5 | while IFS="|" read -r date slug title_html tag; do
+            local tag_html=""
+            [ -n "$tag" ] && tag_html=" <a href=\"/tags/${tag}/\" class=\"tag tag-${tag}\">${tag}</a>"
+            echo "<li><time datetime=\"$date\">$date</time> <a href=\"/posts/${slug}.html\">$title_html</a>${tag_html}</li>"
         done
 
         echo "</ul>"
@@ -416,15 +445,18 @@ build_posts_index() {
 
         for md_file in "$POSTS_DIR"/*.md; do
             [ -f "$md_file" ] || continue
-            local slug title title_html date
+            local slug title title_html date tag
             slug=$(get_slug "$md_file")
             title=$(parse_frontmatter "$md_file" "title")
             [ -z "$title" ] && title="$slug"
             title_html=$(html_escape "$title" | strip_newlines)
             date=$(get_date_with_fallback "$md_file")
-            echo "${date}|${slug}|${title_html}"
-        done | sort -r | while IFS="|" read -r date slug title_html; do
-            echo "<li><time datetime=\"$date\">$date</time> <a href=\"/posts/${slug}.html\">$title_html</a></li>"
+            tag=$(get_tag "$md_file")
+            echo "${date}|${slug}|${title_html}|${tag}"
+        done | sort -r | while IFS="|" read -r date slug title_html tag; do
+            local tag_html=""
+            [ -n "$tag" ] && tag_html=" <a href=\"/tags/${tag}/\" class=\"tag tag-${tag}\">${tag}</a>"
+            echo "<li><time datetime=\"$date\">$date</time> <a href=\"/posts/${slug}.html\">$title_html</a>${tag_html}</li>"
         done
 
         echo "</ul>"
@@ -613,6 +645,116 @@ build_stories_rss() {
     echo "Built: $rss_file"
 }
 
+
+build_tag_index() {
+    local tag="$1"
+    local tag_dir="$PUBLIC_DIR/tags/$tag"
+    local index_file="$tag_dir/index.html"
+    local protocol="https"
+    [ "$DOMAIN" = "localhost" ] && protocol="http"
+    
+    mkdir -p "$tag_dir"
+    
+    local tag_display
+    tag_display=$(echo "$tag" | sed "s/-/ /g; s/\b./\u&/g")
+    
+    {
+        sed -e "s/{{TITLE}}/$tag_display/g" \
+            -e "s/{{DESCRIPTION}}/Posts about $tag_display/g" \
+            -e "s/{{OG_TYPE}}/website/g" \
+            -e "s|{{CANONICAL}}|${protocol}://${DOMAIN}/tags/${tag}/|g" \
+            "$TEMPLATES_DIR/header.html"
+        
+        echo "<header class=\"hero\">"
+        echo "<h1>$tag_display</h1>"
+        echo "<p>Posts tagged with <span class=\"tag tag-${tag}\">${tag}</span></p>"
+        echo "<p class=\"rss-link\"><a href=\"/tags/${tag}/feed.xml\">RSS Feed</a></p>"
+        echo "</header>"
+        echo "<ul class=\"post-list\">"
+        
+        for md_file in "$POSTS_DIR"/*.md; do
+            [ -f "$md_file" ] || continue
+            local post_tag slug title title_html date
+            post_tag=$(get_tag "$md_file")
+            [ "$post_tag" != "$tag" ] && continue
+            
+            slug=$(get_slug "$md_file")
+            title=$(parse_frontmatter "$md_file" "title")
+            [ -z "$title" ] && title="$slug"
+            title_html=$(html_escape "$title" | strip_newlines)
+            date=$(get_date_with_fallback "$md_file")
+            echo "${date}|${slug}|${title_html}"
+        done | sort -r | while IFS="|" read -r date slug title_html; do
+            echo "<li><time datetime=\"$date\">$date</time> <a href=\"/posts/${slug}.html\">$title_html</a></li>"
+        done
+        
+        echo "</ul>"
+        echo "<p class=\"more-link\"><a href=\"/posts/\">\xe2\x86\x90 All posts</a></p>"
+        
+        output_footer
+    } > "$index_file"
+    
+    echo "Built: $index_file"
+}
+
+build_tag_rss() {
+    local tag="$1"
+    local rss_file="$PUBLIC_DIR/tags/$tag/feed.xml"
+    local protocol="https"
+    [ "$DOMAIN" = "localhost" ] && protocol="http"
+    
+    local tag_display
+    tag_display=$(echo "$tag" | sed "s/-/ /g; s/\b./\u&/g")
+    
+    {
+        echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+        echo "<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">"
+        echo "<channel>"
+        echo "  <title>Ashwater - $tag_display</title>"
+        echo "  <link>${protocol}://${DOMAIN}/tags/${tag}/</link>"
+        echo "  <description>Posts about $tag_display from Ashwater</description>"
+        echo "  <atom:link href=\"${protocol}://${DOMAIN}/tags/${tag}/feed.xml\" rel=\"self\" type=\"application/rss+xml\"/>"
+        
+        for md_file in "$POSTS_DIR"/*.md; do
+            [ -f "$md_file" ] || continue
+            local post_tag slug title date description
+            post_tag=$(get_tag "$md_file")
+            [ "$post_tag" != "$tag" ] && continue
+            
+            slug=$(get_slug "$md_file")
+            title=$(parse_frontmatter "$md_file" "title")
+            [ -z "$title" ] && title="$slug"
+            date=$(get_date_with_fallback "$md_file")
+            description=$(get_description "$md_file")
+            title=$(printf "%s" "$title" | sed "s/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g")
+            description=$(printf "%s" "$description" | sed "s/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g")
+            echo "${date}|${slug}|${title}|${description}"
+        done | sort -r | while IFS="|" read -r date slug title description; do
+            [ -z "$date" ] && continue
+            echo "  <item>"
+            echo "    <title>$title</title>"
+            echo "    <link>${protocol}://${DOMAIN}/posts/${slug}.html</link>"
+            echo "    <guid>${protocol}://${DOMAIN}/posts/${slug}.html</guid>"
+            echo "    <pubDate>$(date -d "$date" -R 2>/dev/null || echo "$date")</pubDate>"
+            echo "    <description>$description</description>"
+            echo "  </item>"
+        done
+        
+        echo "</channel>"
+        echo "</rss>"
+    } > "$rss_file"
+    
+    echo "Built: $rss_file"
+}
+
+build_all_tags() {
+    for tag in "${VALID_TAGS[@]}"; do
+        build_tag_index "$tag"
+        build_tag_rss "$tag"
+    done
+}
+
+
 echo "Building blog..."
 
 # Build posts with prev/next navigation
@@ -664,5 +806,7 @@ build_sitemap
 build_robots
 build_rss
 build_stories_rss
+
+build_all_tags
 
 echo "Done!"

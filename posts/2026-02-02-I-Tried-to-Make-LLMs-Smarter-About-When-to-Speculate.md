@@ -1,6 +1,7 @@
 ---
 title: I Tried to Make LLMs Smarter About When to Speculate. It Didn't Matter.
 date: 2026-02-02
+tag: tinkering
 description: A shower thought, a week of experiments, and a satisfying dead end.
 ---
 

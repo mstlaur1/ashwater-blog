@@ -1,6 +1,7 @@
 ---
 title: Tiny AI, Big Dreams: Running a Language Model on a $15 Computer
 date: 2026-01-30
+tag: tinkering
 description: How a 15-million parameter AI generates daily stories on a Raspberry Pi Zero 2 W, and what it means for the future of local inference.
 ---
 

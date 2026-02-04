@@ -5,55 +5,107 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Colophon | Ashwater</title>
   <meta name="description" content="The hardware and software stack powering Ashwater">
-  <link rel="stylesheet" href="/style.css?v=3">
+  <link rel="stylesheet" href="/style.css?v=5">
   <link rel="icon" href="/favicon.ico">
   <style>.vitals td:first-child { font-weight: bold; } .vitals { margin: 1rem 0; }</style>
 </head>
 <body>
 <nav>
   <a href="/">~/home</a>
+  <a href="/posts/">~/posts</a>
   <a href="/pi-stories/">~/pi-stories</a>
   <a href="/about.html">~/about</a>
 </nav>
 <main>
 <h1>Colophon</h1>
 
-<p>This blog is served from a tiny computer sitting on a shelf, running 24/7 on less power than an LED bulb.</p>
-
 <h2>Live Vitals</h2>
 <table class="vitals">
-<tr><td>Uptime</td><td>4h 32m</td></tr>
-<tr><td>CPU Temp</td><td>45.1°C</td></tr>
-<tr><td>Memory</td><td>113MB / 350MB (32%)</td></tr>
-<tr><td>Load</td><td>0.22</td></tr>
-<tr><td>Disk</td><td>3.0G used / 53G free</td></tr>
-<tr><td>Updated</td><td>2026-01-30 23:43</td></tr>
+<tr><td>Uptime</td><td>2d 13h</td></tr>
+<tr><td>CPU Temp</td><td>34.3°C</td></tr>
+<tr><td>Memory</td><td>128MB / 464MB (27%)</td></tr>
+<tr><td>Load</td><td>0.00</td></tr>
+<tr><td>Disk</td><td>3.5G used / 52G free</td></tr>
+<tr><td>Updated</td><td>2026-02-04 09:30</td></tr>
 </table>
 
-<h2>Hardware</h2>
+<p>This blog is served from a tiny computer sitting on a shelf, running 24&#47;7 on less power than an LED bulb.</p>
+<h2 id="hardware">Hardware</h2>
 <table>
-<tr><td><strong>Board</strong></td><td>Raspberry Pi Zero 2 W</td></tr>
-<tr><td><strong>CPU</strong></td><td>Quad-core ARM Cortex-A53 @ 1GHz</td></tr>
-<tr><td><strong>RAM</strong></td><td>512MB LPDDR2</td></tr>
-<tr><td><strong>Storage</strong></td><td>64GB microSD</td></tr>
-<tr><td><strong>Network</strong></td><td>802.11 b/g/n WiFi</td></tr>
-<tr><td><strong>Power</strong></td><td>~0.5W idle, ~1.5W under load</td></tr>
-<tr><td><strong>Cost</strong></td><td>~$15 USD</td></tr>
+<thead>
+<tr>
+<th>Component</th>
+<th>Spec</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Board</td>
+<td>Raspberry Pi Zero 2 W</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>Quad-core ARM Cortex-A53 @ 1GHz</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>512MB LPDDR2</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>64GB microSD</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>802.11 b&#47;g&#47;n WiFi</td>
+</tr>
+<tr>
+<td>Power</td>
+<td>~0.5W idle, ~1.5W under load</td>
+</tr>
+<tr>
+<td>Cost</td>
+<td>~$15 USD</td>
+</tr>
+</tbody>
 </table>
-
-<h2>Software Stack</h2>
+<h2 id="software-stack">Software Stack</h2>
 <table>
-<tr><td><strong>OS</strong></td><td>Raspberry Pi OS Lite (Debian Bookworm)</td></tr>
-<tr><td><strong>Web Server</strong></td><td>lighttpd</td></tr>
-<tr><td><strong>Tunnel</strong></td><td>Cloudflare Tunnel (cloudflared)</td></tr>
-<tr><td><strong>Build System</strong></td><td>~250 lines of bash + lowdown</td></tr>
-<tr><td><strong>AI Model</strong></td><td>TinyLlama-15M-Stories (14MB GGUF)</td></tr>
-<tr><td><strong>Inference</strong></td><td>llama.cpp (~100 tokens/sec)</td></tr>
+<thead>
+<tr>
+<th>Component</th>
+<th>Tech</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OS</td>
+<td>Raspberry Pi OS Lite (Debian Bookworm)</td>
+</tr>
+<tr>
+<td>Web Server</td>
+<td>lighttpd</td>
+</tr>
+<tr>
+<td>Tunnel</td>
+<td>Cloudflare Tunnel (cloudflared)</td>
+</tr>
+<tr>
+<td>Build System</td>
+<td>~250 lines of bash + lowdown</td>
+</tr>
+<tr>
+<td>AI Model</td>
+<td>TinyLlama-15M-Stories (14MB GGUF)</td>
+</tr>
+<tr>
+<td>Inference</td>
+<td>llama.cpp (~100 tokens&#47;sec)</td>
+</tr>
+</tbody>
 </table>
-
-<h2>Architecture</h2>
-<pre>
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+<h2 id="architecture">Architecture</h2>
+<pre><code>┌─────────────┐     ┌─────────────┐     ┌─────────────┐
 │   Browser   │────▶│  Cloudflare │────▶│  Pi Zero 2  │
 │             │◀────│   (Tunnel)  │◀────│  (lighttpd) │
 └─────────────┘     └─────────────┘     └─────────────┘
@@ -61,9 +113,8 @@
                     HTTPS termination
                     DDoS protection
                     (No caching - pure tunnel)
-</pre>
-
-<h2>Fun Facts</h2>
+</code></pre>
+<h2 id="fun-facts">Fun Facts</h2>
 <ul>
 <li>The Pi draws about <strong>4 kWh per year</strong> — roughly $0.50 in electricity</li>
 <li>Every page you see was served directly from this tiny board, not a CDN</li>
@@ -72,15 +123,14 @@
 <li>Build time for the whole site: ~0.1 seconds</li>
 <li>The WiFi chip is the bottleneck — theoretically maxing out at ~50 Mbps</li>
 </ul>
-
-<h2>Why?</h2>
-<p>Because its fun. Because a $15 computer can serve a blog to thousands of people. Because the web doesnt need to be complicated.</p>
+<h2 id="why">Why?</h2>
+<p>Because it&#8217;s fun. Because a $15 computer can serve a blog to thousands of people. Because the web doesn&#8217;t need to be complicated.</p>
 
 </main>
 <footer>
   <p><a href="/feed.xml">rss</a></p>
   <p><a href="/colophon.html">Served from a Pi Zero 2 W</a></p>
-  <p class="uptime">uptime: 4h 32m</p>
+  <p class="uptime">uptime: 2d 13h</p>
 </footer>
 </body>
 </html>

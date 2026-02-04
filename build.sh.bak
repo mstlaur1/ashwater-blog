@@ -252,44 +252,14 @@ build_pi_story() {
     echo "Built: $html_file"
 }
 
-# New build_index function that reads from pages/home.md
-
 build_index() {
     local index_file="$PUBLIC_DIR/index.html"
     local protocol="https"
     [ "$DOMAIN" = "localhost" ] && protocol="http"
 
-    # Read from home.md if it exists, otherwise use defaults
-    local home_title="Ashwater"
-    local home_tagline="Projects, planes, and parenthood."
-    local home_description="Projects, planes, and parenthood. A tinkerer's journal from the Laurentians."
-    local home_content=""
-
-    if [ -f "$PAGES_DIR/home.md" ]; then
-        local parsed_title parsed_tagline
-        parsed_title=$(parse_frontmatter "$PAGES_DIR/home.md" "title")
-        parsed_tagline=$(parse_frontmatter "$PAGES_DIR/home.md" "tagline")
-        [ -n "$parsed_title" ] && home_title="$parsed_title"
-        [ -n "$parsed_tagline" ] && home_tagline="$parsed_tagline"
-        home_description="$home_tagline A tinkerer's journal from the Laurentians."
-        home_content=$(get_content "$PAGES_DIR/home.md" | lowdown)
-    fi
-
-    # Fallback intro if home.md has no content
-    if [ -z "$home_content" ]; then
-        home_content="<p>Welcome. I'm Mikhail—father, airline pilot, and habitual tinkerer.</p>
-<p>This site is my journal: notes on self-hosting, aviation, fatherhood, and whatever else I'm building or breaking. It runs on a Raspberry Pi Zero 2 W drawing half a watt, because in an age of bloated frameworks and infinite cloud compute, there's something satisfying about creative constraints.</p>
-<p>No tracking. No JavaScript. Just words, served from a shelf in the Laurentians.</p>"
-    fi
-
-    local title_sed tagline_sed desc_sed
-    title_sed=$(sed_escape "$home_title")
-    tagline_sed=$(sed_escape "$home_tagline")
-    desc_sed=$(sed_escape "$home_description")
-
     {
         sed -e "s/{{TITLE}}/Home/g" \
-            -e "s/{{DESCRIPTION}}/$desc_sed/g" \
+            -e "s/{{DESCRIPTION}}/Projects, planes, and parenthood. A tinkerer's journal from the Laurentians./g" \
             -e "s/{{OG_TYPE}}/website/g" \
             -e "s|{{CANONICAL}}|${protocol}://${DOMAIN}/|g" \
             "$TEMPLATES_DIR/header.html"
@@ -297,18 +267,20 @@ build_index() {
         # WebSite JSON-LD
         echo "<script type=\"application/ld+json\">"
         echo "{\"@context\":\"https://schema.org\",\"@type\":\"WebSite\","
-        echo "\"name\":\"$title_sed\","
+        echo "\"name\":\"Ashwater\","
         echo "\"url\":\"${protocol}://${DOMAIN}/\","
         echo "\"author\":{\"@type\":\"Person\",\"name\":\"Mikhail St-Laurent\"}}"
         echo "</script>"
 
         echo "<header class=\"hero\">"
-        echo "<h1>$title_sed</h1>"
-        echo "<p class=\"tagline\">$tagline_sed</p>"
+        echo "<h1>Ashwater</h1>"
+        echo "<p class=\"tagline\">Projects, planes, and parenthood.</p>"
         echo "</header>"
 
         echo "<section class=\"intro\">"
-        echo "$home_content"
+        echo "<p>Welcome. I'm Mikhail—father, airline pilot, and habitual tinkerer.</p>"
+        echo "<p>This site is my journal: notes on self-hosting, aviation, fatherhood, and whatever else I'm building or breaking. It runs on a Raspberry Pi Zero 2 W drawing half a watt, because in an age of bloated frameworks and infinite cloud compute, there's something satisfying about creative constraints.</p>"
+        echo "<p>No tracking. No JavaScript. Just words, served from a shelf in the Laurentians.</p>"
         echo "</section>"
 
         echo "<h2>Recent Posts</h2>"
@@ -356,6 +328,7 @@ build_index() {
 
     echo "Built: $index_file"
 }
+
 
 build_about() {
     local about_file="$PUBLIC_DIR/about.html"
@@ -521,7 +494,6 @@ build_robots() {
 
     cat > "$PUBLIC_DIR/robots.txt" << EOF
 User-agent: *
-Disallow: /honeypot/
 Allow: /
 
 Sitemap: ${protocol}://${DOMAIN}/sitemap.xml

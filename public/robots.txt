@@ -1,4 +1,5 @@
 User-agent: *
+Disallow: /honeypot/
 Allow: /
 
 Sitemap: https://blog.ashwater.ca/sitemap.xml

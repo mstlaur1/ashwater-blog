@@ -257,3 +257,47 @@ footer p {
   color: var(--fg-dim);
   font-size: 0.875rem;
 }
+
+/* Share buttons */
+.share-buttons {
+  margin-top: 2rem;
+  padding: 1rem 0;
+  border-top: 1px dashed #333;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.share-buttons span {
+  color: var(--fg-dim);
+  font-size: 0.875rem;
+  margin-right: 0.25rem;
+}
+
+.share-buttons a,
+.share-buttons .copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--fg-dim);
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.share-buttons a:hover,
+.share-buttons .copy-btn:hover {
+  color: var(--link);
+  border-color: var(--link);
+  background: rgba(0, 255, 136, 0.05);
+  text-decoration: none;
+}
+
+.share-buttons svg {
+  display: block;
+}

@@ -2,7 +2,9 @@
 # Update Pi vitals every 30 minutes
 
 BLOG_DIR="/var/www/blog"
+PAGES_DIR="$BLOG_DIR/pages"
 PUBLIC_DIR="$BLOG_DIR/public"
+TEMPLATES_DIR="$BLOG_DIR/templates"
 
 # Get stats
 UPTIME_SECONDS=$(cat /proc/uptime | cut -d. -f1)
@@ -18,7 +20,7 @@ fi
 
 CPU_TEMP=$(cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null | awk "{printf \"%.1f\", \$1/1000}")
 MEM_USED=$(free -m | awk "/Mem:/ {print \$3}")
-MEM_TOTAL=$(free -m | awk "/Mem:/ {print \$7}")
+MEM_TOTAL=$(free -m | awk "/Mem:/ {print \$2}")
 MEM_PCT=$((MEM_USED * 100 / MEM_TOTAL))
 LOAD=$(cat /proc/loadavg | cut -d" " -f1)
 DISK_USED=$(df -h / | awk "NR==2 {print \$3}")
@@ -28,40 +30,14 @@ UPDATED=$(date "+%Y-%m-%d %H:%M")
 # Save uptime for footer
 echo "$UPTIME_STR" > "$PUBLIC_DIR/uptime.txt"
 
-# Generate colophon with live stats
-cat > "$PUBLIC_DIR/colophon.html" << EOF
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Colophon | Ashwater</title>
-  <meta name="description" content="The hardware and software stack powering Ashwater">
-  <link rel="stylesheet" href="/style.css?v=3">
-  <link rel="icon" href="/favicon.ico">
-  <style>.vitals td:first-child { font-weight: bold; } .vitals { margin: 1rem 0; }</style>
-</head>
-<body>
-<nav>
-  <a href="/">~/home</a>
-  <a href="/posts/">~/posts</a>
-  <a href="/pi-stories/">~/pi-stories</a>
-  <a href="/about.html">~/about</a>
-</nav>
-<main>
-<h1>Colophon</h1>
-
-<p>This blog is served from a tiny computer sitting on a shelf, running 24/7 on less power than an LED bulb.</p>
-
-<h2>Live Vitals</h2>
-<table class="vitals">
-<tr><td>Uptime</td><td>${UPTIME_STR}</td></tr>
-<tr><td>CPU Temp</td><td>${CPU_TEMP}°C</td></tr>
-<tr><td>Memory</td><td>${MEM_USED}MB / ${MEM_TOTAL}MB (${MEM_PCT}%)</td></tr>
-<tr><td>Load</td><td>${LOAD}</td></tr>
-<tr><td>Disk</td><td>${DISK_USED} used / ${DISK_AVAIL} free</td></tr>
-<tr><td>Updated</td><td>${UPDATED}</td></tr>
-</table>
+# Check if colophon.md exists and render it
+COLOPHON_CONTENT=""
+if [ -f "$PAGES_DIR/colophon.md" ]; then
+    # Skip frontmatter and render markdown
+    COLOPHON_CONTENT=$(sed '1,/^---$/d' "$PAGES_DIR/colophon.md" | lowdown)
+else
+    # Fallback content
+    COLOPHON_CONTENT="<p>This blog is served from a tiny computer sitting on a shelf, running 24/7 on less power than an LED bulb.</p>
 
 <h2>Hardware</h2>
 <table>
@@ -107,7 +83,43 @@ cat > "$PUBLIC_DIR/colophon.html" << EOF
 </ul>
 
 <h2>Why?</h2>
-<p>Because its fun. Because a \$15 computer can serve a blog to thousands of people. Because the web doesnt need to be complicated.</p>
+<p>Because it's fun. Because a \$15 computer can serve a blog to thousands of people. Because the web doesn't need to be complicated.</p>"
+fi
+
+# Generate colophon with live stats
+cat > "$PUBLIC_DIR/colophon.html" << EOF
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colophon | Ashwater</title>
+  <meta name="description" content="The hardware and software stack powering Ashwater">
+  <link rel="stylesheet" href="/style.css?v=5">
+  <link rel="icon" href="/favicon.ico">
+  <style>.vitals td:first-child { font-weight: bold; } .vitals { margin: 1rem 0; }</style>
+</head>
+<body>
+<nav>
+  <a href="/">~/home</a>
+  <a href="/posts/">~/posts</a>
+  <a href="/pi-stories/">~/pi-stories</a>
+  <a href="/about.html">~/about</a>
+</nav>
+<main>
+<h1>Colophon</h1>
+
+<h2>Live Vitals</h2>
+<table class="vitals">
+<tr><td>Uptime</td><td>${UPTIME_STR}</td></tr>
+<tr><td>CPU Temp</td><td>${CPU_TEMP}°C</td></tr>
+<tr><td>Memory</td><td>${MEM_USED}MB / ${MEM_TOTAL}MB (${MEM_PCT}%)</td></tr>
+<tr><td>Load</td><td>${LOAD}</td></tr>
+<tr><td>Disk</td><td>${DISK_USED} used / ${DISK_AVAIL} free</td></tr>
+<tr><td>Updated</td><td>${UPDATED}</td></tr>
+</table>
+
+${COLOPHON_CONTENT}
 
 </main>
 <footer>

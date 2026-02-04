@@ -5,5 +5,12 @@
   <link>http://localhost/tags/aviation/</link>
   <description>Posts about Aviation from Ashwater</description>
   <atom:link href="http://localhost/tags/aviation/feed.xml" rel="self" type="application/rss+xml"/>
+  <item>
+    <title>My Day Starts Before Yours: What an Airline Pilot's Morning Actually Looks Like</title>
+    <link>http://localhost/posts/pilot-life.html</link>
+    <guid>http://localhost/posts/pilot-life.html</guid>
+    <pubDate>Tue, 03 Feb 2026 00:00:00 -0500</pubDate>
+    <description>Most people think the hard part of being an airline pilot happens in the air. Nope.</description>
+  </item>
 </channel>
 </rss>

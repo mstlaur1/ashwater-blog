@@ -18,7 +18,6 @@ discover_tags() {
         grep -m1 "^tag:" "$md_file" | cut -d: -f2 | tr -d " "
     done | sort -u
 }
-VALID_TAGS=()
 
 generate_tag_nav() {
     local nav="Browse by: "

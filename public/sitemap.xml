@@ -1,62 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://blog.ashwater.ca/</loc></url>
-  <url><loc>https://blog.ashwater.ca/posts/</loc></url>
-  <url><loc>https://blog.ashwater.ca/pi-stories/</loc></url>
+  <url><loc>http://localhost/</loc></url>
+  <url><loc>http://localhost/posts/</loc></url>
+  <url><loc>http://localhost/pi-stories/</loc></url>
   <url>
-    <loc>https://blog.ashwater.ca/posts/hello-world.html</loc>
+    <loc>http://localhost/posts/hello-world.html</loc>
     <lastmod>2026-01-29</lastmod>
   </url>
   <url>
-    <loc>https://blog.ashwater.ca/posts/tiny-ai-big-dreams.html</loc>
+    <loc>http://localhost/posts/tiny-ai-big-dreams.html</loc>
     <lastmod>2026-01-30</lastmod>
   </url>
   <url>
-    <loc>https://blog.ashwater.ca/posts/when-your-hypothesis-fails.html</loc>
+    <loc>http://localhost/posts/when-your-hypothesis-fails.html</loc>
     <lastmod>2026-02-01</lastmod>
   </url>
   <url>
-    <loc>https://blog.ashwater.ca/posts/I-Tried-to-Make-LLMs-Smarter-About-When-to-Speculate.html</loc>
+    <loc>http://localhost/posts/I-Tried-to-Make-LLMs-Smarter-About-When-to-Speculate.html</loc>
     <lastmod>2026-02-02</lastmod>
   </url>
   <url>
-    <loc>https://blog.ashwater.ca/posts/pilot-life.html</loc>
+    <loc>http://localhost/posts/pilot-life.html</loc>
     <lastmod>2026-02-03</lastmod>
   </url>
   <url>
-    <loc>https://blog.ashwater.ca/posts/honeypot.html</loc>
+    <loc>http://localhost/posts/honeypot.html</loc>
     <lastmod>2026-02-04</lastmod>
   </url>
   <url>
-    <loc>https://blog.ashwater.ca/pi-stories/pi-story-2026-01-30-2.html</loc>
+    <loc>http://localhost/pi-stories/pi-story-2026-01-30-2.html</loc>
     <lastmod>2026-01-30</lastmod>
   </url>
   <url>
-    <loc>https://blog.ashwater.ca/pi-stories/pi-story-2026-01-30-3.html</loc>
+    <loc>http://localhost/pi-stories/pi-story-2026-01-30-3.html</loc>
     <lastmod>2026-01-30</lastmod>
   </url>
   <url>
-    <loc>https://blog.ashwater.ca/pi-stories/pi-story-2026-01-30.html</loc>
+    <loc>http://localhost/pi-stories/pi-story-2026-01-30.html</loc>
     <lastmod>2026-01-30</lastmod>
   </url>
   <url>
-    <loc>https://blog.ashwater.ca/pi-stories/pi-story-2026-01-31.html</loc>
+    <loc>http://localhost/pi-stories/pi-story-2026-01-31.html</loc>
     <lastmod>2026-01-31</lastmod>
   </url>
   <url>
-    <loc>https://blog.ashwater.ca/pi-stories/pi-story-2026-02-01.html</loc>
+    <loc>http://localhost/pi-stories/pi-story-2026-02-01.html</loc>
     <lastmod>2026-02-01</lastmod>
   </url>
   <url>
-    <loc>https://blog.ashwater.ca/pi-stories/pi-story-2026-02-02.html</loc>
+    <loc>http://localhost/pi-stories/pi-story-2026-02-02.html</loc>
     <lastmod>2026-02-02</lastmod>
   </url>
   <url>
-    <loc>https://blog.ashwater.ca/pi-stories/pi-story-2026-02-03.html</loc>
+    <loc>http://localhost/pi-stories/pi-story-2026-02-03.html</loc>
     <lastmod>2026-02-03</lastmod>
   </url>
   <url>
-    <loc>https://blog.ashwater.ca/pi-stories/pi-story-2026-02-04.html</loc>
+    <loc>http://localhost/pi-stories/pi-story-2026-02-04.html</loc>
     <lastmod>2026-02-04</lastmod>
   </url>
 </urlset>

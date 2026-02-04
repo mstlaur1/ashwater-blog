@@ -305,36 +305,38 @@ footer p {
 /* Tags */
 .tag {
   display: inline-block;
-  font-size: 0.7rem;
-  padding: 0.15rem 0.4rem;
-  border-radius: 3px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.6rem; opacity: 0.5;
+  padding: 0.1rem 0.35rem;
+  border: 1px solid;
+  background: transparent;
   text-decoration: none;
-  margin-left: 0.5rem;
-  opacity: 0.8;
-  vertical-align: middle;
+  margin: 0 0.5rem; vertical-align: middle;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .tag:hover {
-  opacity: 1;
   text-decoration: none;
+  text-shadow: 0 0 4px currentColor; opacity: 1;
 }
 
 .tag-aviation {
-  background: rgba(74, 144, 217, 0.2);
-  color: #6aafef;
+  color: #5fb3ff;
+  border-color: #5fb3ff;
 }
 
 .tag-tinkering {
-  background: rgba(212, 135, 74, 0.2);
-  color: #e8a862;
+  color: #ffb347;
+  border-color: #ffb347;
 }
 
 .tag-dad-life {
-  background: rgba(90, 181, 74, 0.2);
-  color: #7ed468;
+  color: #66ff66;
+  border-color: #66ff66;
 }
 
-.rss-link {
   font-size: 0.9rem;
   margin-top: 0.5rem;
 }
+.tag-nav { margin: 1.5rem 0; font-size: 0.9rem; opacity: 0.8; }

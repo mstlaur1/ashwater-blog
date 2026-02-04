@@ -11,7 +11,27 @@ PUBLIC_DIR="$BLOG_DIR/public"
 TEMPLATES_DIR="$BLOG_DIR/templates"
 DOMAIN="${BLOG_DOMAIN:-localhost}"
 # Tag configuration
-VALID_TAGS=("aviation" "tinkering" "dad-life")
+# Auto-discover tags from posts
+discover_tags() {
+    for md_file in "$POSTS_DIR"/*.md; do
+        [ -f "$md_file" ] || continue
+        grep -m1 "^tag:" "$md_file" | cut -d: -f2 | tr -d " "
+    done | sort -u
+}
+VALID_TAGS=()
+
+generate_tag_nav() {
+    local nav="Browse by: "
+    local first=true
+    while IFS= read -r tag; do
+        [ -n "$tag" ] || continue
+        local display
+        display=$(echo "$tag" | sed "s/-/ /g; s/\\b./\\u&/g")
+        [ "$first" = true ] && first=false || nav+=" · "
+        nav+="<a href=\"/tags/${tag}/\">${display}</a>"
+    done < <(discover_tags)
+    echo "$nav"
+}
 
 get_tag() {
     local file="$1"
@@ -441,6 +461,7 @@ build_posts_index() {
         echo "<h1>Posts</h1>"
         echo "<p>Everything I've written, newest first.</p>"
         echo "</header>"
+        echo "<nav class=\"tag-nav\">$(generate_tag_nav)</nav>"
         echo "<ul class=\"post-list\">"
 
         for md_file in "$POSTS_DIR"/*.md; do
@@ -748,10 +769,11 @@ build_tag_rss() {
 }
 
 build_all_tags() {
-    for tag in "${VALID_TAGS[@]}"; do
+    while IFS= read -r tag; do
+        [ -n "$tag" ] || continue
         build_tag_index "$tag"
         build_tag_rss "$tag"
-    done
+    done < <(discover_tags)
 }
 
 
@@ -769,6 +791,7 @@ while IFS="|" read -r date file slug title; do
 done < <(
     for md_file in "$POSTS_DIR"/*.md; do
         [ -f "$md_file" ] || continue
+        grep -q "^draft: true" "$md_file" && continue
         slug=$(get_slug "$md_file")
         title=$(parse_frontmatter "$md_file" "title")
         [ -z "$title" ] && title="$slug"

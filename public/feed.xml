@@ -2,48 +2,48 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
   <title>Ashwater</title>
-  <link>https://blog.ashwater.ca/</link>
+  <link>http://localhost/</link>
   <description>A minimal blog about self-hosting, Linux, and tinkering with technology</description>
-  <atom:link href="https://blog.ashwater.ca/feed.xml" rel="self" type="application/rss+xml"/>
+  <atom:link href="http://localhost/feed.xml" rel="self" type="application/rss+xml"/>
   <item>
     <title>I Built a Honeypot for My $15 Blog Server</title>
-    <link>https://blog.ashwater.ca/posts/honeypot.html</link>
-    <guid>https://blog.ashwater.ca/posts/honeypot.html</guid>
+    <link>http://localhost/posts/honeypot.html</link>
+    <guid>http://localhost/posts/honeypot.html</guid>
     <pubDate>Wed, 04 Feb 2026 00:00:00 -0500</pubDate>
     <description>Turning bot attacks into entertainment with gzip bombs and fake login pages</description>
   </item>
   <item>
     <title>My Day Starts Before Yours: What an Airline Pilot's Morning Actually Looks Like</title>
-    <link>https://blog.ashwater.ca/posts/pilot-life.html</link>
-    <guid>https://blog.ashwater.ca/posts/pilot-life.html</guid>
+    <link>http://localhost/posts/pilot-life.html</link>
+    <guid>http://localhost/posts/pilot-life.html</guid>
     <pubDate>Tue, 03 Feb 2026 00:00:00 -0500</pubDate>
     <description>Most people think the hard part of being an airline pilot happens in the air. Nope.</description>
   </item>
   <item>
     <title>I Tried to Make LLMs Smarter About When to Speculate. It Didn't Matter.</title>
-    <link>https://blog.ashwater.ca/posts/I-Tried-to-Make-LLMs-Smarter-About-When-to-Speculate.html</link>
-    <guid>https://blog.ashwater.ca/posts/I-Tried-to-Make-LLMs-Smarter-About-When-to-Speculate.html</guid>
+    <link>http://localhost/posts/I-Tried-to-Make-LLMs-Smarter-About-When-to-Speculate.html</link>
+    <guid>http://localhost/posts/I-Tried-to-Make-LLMs-Smarter-About-When-to-Speculate.html</guid>
     <pubDate>Mon, 02 Feb 2026 00:00:00 -0500</pubDate>
     <description>A shower thought, a week of experiments, and a satisfying dead end.</description>
   </item>
   <item>
     <title>When Your Hypothesis Fails: A Journey to 2x Faster Edge LLM Inference </title>
-    <link>https://blog.ashwater.ca/posts/when-your-hypothesis-fails.html</link>
-    <guid>https://blog.ashwater.ca/posts/when-your-hypothesis-fails.html</guid>
+    <link>http://localhost/posts/when-your-hypothesis-fails.html</link>
+    <guid>http://localhost/posts/when-your-hypothesis-fails.html</guid>
     <pubDate>Sun, 01 Feb 2026 00:00:00 -0500</pubDate>
     <description>I wanted to run a 7B parameter language model on a Raspberry Pi Zero.</description>
   </item>
   <item>
     <title>Tiny AI, Big Dreams: Running a Language Model on a $15 Computer</title>
-    <link>https://blog.ashwater.ca/posts/tiny-ai-big-dreams.html</link>
-    <guid>https://blog.ashwater.ca/posts/tiny-ai-big-dreams.html</guid>
+    <link>http://localhost/posts/tiny-ai-big-dreams.html</link>
+    <guid>http://localhost/posts/tiny-ai-big-dreams.html</guid>
     <pubDate>Fri, 30 Jan 2026 00:00:00 -0500</pubDate>
     <description>How a 15-million parameter AI generates daily stories on a Raspberry Pi Zero 2 W, and what it means for the future of local inference.</description>
   </item>
   <item>
     <title>Hello World</title>
-    <link>https://blog.ashwater.ca/posts/hello-world.html</link>
-    <guid>https://blog.ashwater.ca/posts/hello-world.html</guid>
+    <link>http://localhost/posts/hello-world.html</link>
+    <guid>http://localhost/posts/hello-world.html</guid>
     <pubDate>Thu, 29 Jan 2026 00:00:00 -0500</pubDate>
     <description>The first post from my tiny Pi-powered blog</description>
   </item>

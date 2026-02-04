@@ -2,8 +2,8 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
   <title>Ashwater - Dad Life</title>
-  <link>https://blog.ashwater.ca/tags/dad-life/</link>
+  <link>http://localhost/tags/dad-life/</link>
   <description>Posts about Dad Life from Ashwater</description>
-  <atom:link href="https://blog.ashwater.ca/tags/dad-life/feed.xml" rel="self" type="application/rss+xml"/>
+  <atom:link href="http://localhost/tags/dad-life/feed.xml" rel="self" type="application/rss+xml"/>
 </channel>
 </rss>
